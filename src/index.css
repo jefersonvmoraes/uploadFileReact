@@ -9,6 +9,7 @@
 body {
   margin: 0;
   font-family: sans-serif;
+
 }
 
 html {
@@ -33,6 +34,7 @@ button {
   padding: 0.5em 1.5em;
   cursor: pointer;
   border-radius: 0.5rem;
+  
 }
 
 img {
@@ -45,6 +47,8 @@ img {
 .column {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  /* justify-content: flex-start;
+  align-items: center; */
+  justify-content: center;
   align-items: center;
 }
