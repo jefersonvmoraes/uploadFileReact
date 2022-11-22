@@ -26,8 +26,9 @@ export function FileUpload() {
   async function onSubmit(e) {
     e.preventDefault();
     if (listFile.length !== 0) {
-      const formData = new FormData();
+      let formData = new FormData();
       formData.append("file", listFile);
+      console.log(listFile)
       setLoading(true);
 
       const headers = {
