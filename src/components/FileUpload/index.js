@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import api from "../../config/configApi";
-import { CgTrash } from "react-icons/cg";
 import {
   AiFillFileAdd,
   AiOutlineCloudUpload,
@@ -8,28 +7,31 @@ import {
 } from "react-icons/ai";
 import "./fileUpload.css";
 
+
 export function FileUpload() {
-  const [listFile, setListFile] = useState([]);
+
+  const [file, setFile] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({});
   const [viewMessage, setViewMessage] = useState(false);
-
+  
   function onChangeFile(e) {
-    let listfile = e.target.files;
-    if (listfile) {
-      setListFile([...listFile, listfile[0]]);
-    } else {
-      return;
-    }
+    setViewMessage(false);
+    let file = e.target.files;
+    if (file[0].name !== "") {
+      setFile([file[0]]);
+    } 
+    return;
   }
 
   async function onSubmit(e) {
     e.preventDefault();
-    if (listFile.length !== 0) {
+    if (file.length !== 0) {
       let formData = new FormData();
-      formData.append("file", listFile);
-      console.log(listFile)
+      formData.append("file", file);
+      console.log(file)
       setLoading(true);
+      setViewMessage(false);
 
       const headers = {
         headers: {
@@ -43,11 +45,7 @@ export function FileUpload() {
           console.log("arvivo enviado");
           setLoading(false);
           setViewMessage(true);
-          setMessage({
-            text: "Arquivo enviado com sucesso!",
-            color: "#198754",
-          });
-          setListFile([]);
+          setMessage({ text: "Arquivo enviado com sucesso!", color: "#198754"});
         })
         .catch((error) => {
           console.log(error);
@@ -55,11 +53,6 @@ export function FileUpload() {
           setViewMessage(true);
           setMessage({ text: "Erro ao enviar o arquivo!", color: "#dc3545" });
         })
-        .finally(() => {
-          setTimeout(() => {
-            setViewMessage(false);
-          }, "3000");
-        });
     } else {
       setViewMessage(true);
       setMessage({ text: "Selecione um arquivo!", color: "#dc3545" });
@@ -68,12 +61,6 @@ export function FileUpload() {
       }, "3000");
     }
   }
-
-  function removeFile(event) {
-    let indexValue = event.currentTarget.value;
-    setListFile(listFile.filter((item) => item.name !== indexValue));
-  }
-
   return (
     <div className="upload-area container">
       <div className="text-center mt-4">
@@ -102,10 +89,7 @@ export function FileUpload() {
 
       <form className="form" onSubmit={onSubmit}>
         <div className="text-center mt-4 button-upload-area">
-          <label
-            className="btn btn-primary label-input-upload"
-            htmlFor="input-upload"
-          >
+          <label className="btn btn-primary label-input-upload" htmlFor="input-upload">
             <span style={{ fontSize: "18px", marginRight: "10px" }}>
               Selecionar arquivo
             </span>
@@ -120,30 +104,17 @@ export function FileUpload() {
           />
         </div>
 
-        {listFile.length !== 0 && (
-          <div className="views-file container">
-            {listFile.map((item, index) => {
-              return (
-                <ul key={index}>
-                  <li>
-                    <div className="view-file-item">
-                      <label>{item?.name}</label>
-                      <button
-                        onClick={removeFile}
-                        type="button"
-                        className="btn btn-outline-danger"
-                        value={item?.name}
-                      >
-                        <CgTrash size={25} />
-                      </button>
-                    </div>
-                  </li>
-                </ul>
-              );
-            })}
+        {file.length !== 0 && (
+          <div className="views-file container"> 
+            <ul>
+              <li>
+                <div className="view-file-item">
+                  <label>{file[0]?.name}</label>
+                </div>
+              </li>
+            </ul>            
           </div>
         )}
-
         <div className="d-grid gap-2 col-6 mx-auto btn-submit">
           <button className="btn btn-primary" type="submit">
             Enviar

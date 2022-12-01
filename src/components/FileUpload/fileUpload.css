@@ -31,7 +31,7 @@ form div label p {
 }
 .view-file-item{
   display: flex;
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
 }
 .trash-remove-file{
