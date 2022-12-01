@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import api from "../../config/configApi";
 import { CgTrash } from "react-icons/cg";
+import axios from "axios";
+import GetUrl from "../GetUrl";
 import {
   AiFillFileAdd,
   AiOutlineCloudUpload,
   AiOutlineLoading3Quarters,
 } from "react-icons/ai";
 import "./fileUpload.css";
-
+var response;
+var result;
+const lambdaURL = process.env.REACT_APP_API_ENDPOINT;
+console.log(lambdaURL);
 export function FileUpload() {
   const [listFile, setListFile] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,9 +20,10 @@ export function FileUpload() {
   const [viewMessage, setViewMessage] = useState(false);
 
   function onChangeFile(e) {
-    let listfile = e.target.files;
-    if (listfile) {
-      setListFile([...listFile, listfile[0]]);
+    let files = e.target.files;
+    if (files) {
+      // console.log(e.target.files[0]);
+      setListFile([...listFile, files[0]]);
     } else {
       return;
     }
@@ -26,20 +32,16 @@ export function FileUpload() {
   async function onSubmit(e) {
     e.preventDefault();
     if (listFile.length !== 0) {
-      const formData = new FormData();
-      formData.append("file", listFile);
       setLoading(true);
-
-      const headers = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
+      var file = listFile[0];
+      var response = await GetUrl(lambdaURL);
+      let uploadUrl = await response.data.uploadURL;
 
       await api
-        .post("/upload-file", formData, headers)
+        .put(uploadUrl, file)
         .then((response) => {
-          console.log("arvivo enviado");
+          console.log(response);
+          console.log("arquivo enviado");
           setLoading(false);
           setViewMessage(true);
           setMessage({
@@ -114,7 +116,7 @@ export function FileUpload() {
             onChange={onChangeFile}
             type="file"
             id="input-upload"
-            accept=".txt"
+            accept=".csv,.xls,.xlsx,.txt"
             className="input-upload"
           />
         </div>

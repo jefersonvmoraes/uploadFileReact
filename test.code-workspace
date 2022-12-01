@@ -1,0 +1,14 @@
+{
+  "folders": [
+	{
+		"path": "."
+	},
+	{
+		"path": "../../uploadFileReact"
+	},
+	{
+		"path": "../../spa_react_javascript_hello-world"
+	}
+],
+  "settings": {}
+}
